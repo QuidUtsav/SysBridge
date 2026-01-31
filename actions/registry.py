@@ -10,7 +10,6 @@ REGISTERED_ACTIONS = {
 }
 
 def execute_action(action_name: str) :
-    for name, action in REGISTERED_ACTIONS.items():
-        if name == action_name:
-            return action.execute()
+    if action_name in REGISTERED_ACTIONS:
+            return REGISTERED_ACTIONS[action_name]()
 
