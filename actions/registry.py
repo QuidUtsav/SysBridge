@@ -9,7 +9,10 @@ REGISTERED_ACTIONS = {
     "fs.open_folder": OpenFolderAction
 }
 
-def execute_action(action_name: str) :
-    if action_name in REGISTERED_ACTIONS:
-            return REGISTERED_ACTIONS[action_name]()
-
+def create_action_instance(action_name: str, **kwargs) :
+    if action_name not in REGISTERED_ACTIONS:
+        raise ValueError(f"Action '{action_name}' is not registered.")
+    
+    action_class = REGISTERED_ACTIONS[action_name]
+    return action_class(**kwargs)
+    
