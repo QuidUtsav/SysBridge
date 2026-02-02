@@ -8,6 +8,3 @@
 
 #     print("Jarvis:", response)
 
-from actions.registry import execute_action
-
-print(execute_action("fs.open_folder"))
