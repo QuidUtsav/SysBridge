@@ -1,10 +1,9 @@
-# from modular_agent.controller import handle_query
-# print("Welcome to Jarvis! Type your query below (type 'exit' to quit).")
-# while True:
-#     prompt = input("You: ")
-#     if prompt.lower() == "exit":
-#         break
-#     response = handle_query(prompt)
+from actions.registry import create_action_instance
 
-#     print("Jarvis:", response)
+from actions.base import OpenFileAction
 
+action = OpenFileAction()
+print(action.name)
+print(action.risk_level)
+print(action.requires_confirmation)
+print(action.reversible)
