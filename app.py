@@ -1,9 +1,9 @@
-from actions.registry import create_action_instance
+from actions.filesystem import OpenFileAction
+from execution.executor import ActionExecutor
 
-from actions.base import OpenFileAction
+action = OpenFileAction(filepath="readme.md")
 
-action = OpenFileAction()
-print(action.name)
-print(action.risk_level)
-print(action.requires_confirmation)
-print(action.reversible)
+executor = ActionExecutor()
+result = executor.execute(action, confirm=True)
+
+print(result)

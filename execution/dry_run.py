@@ -1,12 +1,14 @@
 
-
 def dry_run(action):
-    
-    explanation={
-        "action": action,
+    preview = {
+        "action": action.name,
         "description": action.description,
         "risk_level": action.risk_level,
         "reversible": action.reversible,
-        "requires_confirmation": action.requires_confirmation
+        "requires_confirmation": action.requires_confirmation,
     }
-    return explanation
+
+    if action.params:
+        preview["parameters"] = action.params
+
+    return preview

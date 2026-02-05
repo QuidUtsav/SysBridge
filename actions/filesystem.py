@@ -1,3 +1,5 @@
+import subprocess
+from pathlib import Path
 from abc import ABC, abstractmethod
 
 class Action(ABC):
@@ -11,21 +13,24 @@ class Action(ABC):
     
     def __init__(
         self,
+        *,
         name:str,
         description:str,
         risk_level:str,
         reversible:bool,
-        requires_confirmation:bool
+        requires_confirmation:bool,
+        params: dict | None = None
     ):
         self.name = name
         self.description = description
         self.risk_level = risk_level
         self.reversible = reversible
-        self.requires_confirmation = requires_confirmation  
+        self.requires_confirmation = requires_confirmation 
+        self.params = params or {} 
     
     def explain(self)->str:
         param_str= ", ".join(
-            f"{key} = {value}" for key, value in self.parameters().items()
+            f"{key} = {value}" for key, value in self.params().items()
         )
         return param_str
     
@@ -68,16 +73,25 @@ class ListDirectoryAction(Action):
         pass
 
 class OpenFileAction(Action):
-    def __init__(self):
+    def __init__(self,*,filepath: str):
         super().__init__(
-            name="system.open_file",
+            name="open file",
             description="Opens a specified file.",
             risk_level="medium",
             reversible=False,
-            requires_confirmation=True
+            requires_confirmation=True,
+            params={"file_path": filepath}
         )
+        self.filepath = filepath
     def execute(self):
-        pass
+        path = Path(self.filepath).expanduser().resolve()
+        if not path.is_file():
+            raise FileNotFoundError(f"File not found: {self.filepath}")
+        
+        subprocess.run(
+            ["xdg-open", str(path)],
+            check=False)
+        return f"Opened file: {self.filepath}"
 
 class OpenFolderAction(Action):
     def __init__(self):

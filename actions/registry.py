@@ -1,4 +1,4 @@
-from actions.base import GetBatteryAction, GetTimeAction, ListDirectoryAction, OpenFileAction, OpenFolderAction
+from actions.filesystem import GetBatteryAction, GetTimeAction, ListDirectoryAction, OpenFileAction, OpenFolderAction
 
 
 REGISTERED_ACTIONS = {

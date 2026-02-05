@@ -1,4 +1,4 @@
-from click import confirm
+
 from execution.dry_run import dry_run
 from datetime import datetime
 from execution.result import ActionResult
@@ -61,7 +61,7 @@ class ActionExecutor:
             return ActionResult(
                 action_name=action.name,
                 status="denied",
-                reason=str(pe),
+                reason=str(e),
                 preview=preview
             )
                     

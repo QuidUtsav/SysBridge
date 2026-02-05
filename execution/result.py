@@ -14,11 +14,23 @@ class ActionResult:
         self.preview = preview
         self.result = result
 
+    def to_dict(self):
+        return {
+            "action": self.action_name,
+            "status": self.status,
+            "reason": self.reason,
+            "result": self.result,
+            "preview": self.preview
+        }
+        
+    def __repr__(self):
+        return str(self.to_dict())
+    
     def explain(self):
         explanation = {
             "action": self.action_name,
             "status": self.status,
-            "reason": self.reason
+            "result": self.result
         }
 
         if self.preview:
