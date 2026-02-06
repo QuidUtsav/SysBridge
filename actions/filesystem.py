@@ -1,6 +1,8 @@
 import subprocess
+import os
 from pathlib import Path
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 class Action(ABC):
     
@@ -46,7 +48,7 @@ class GetTimeAction(Action):
             requires_confirmation=False
         )
     def execute(self):
-        pass
+        return datetime.now().isoformat()
     
 class GetBatteryAction(Action):
     def __init__(self):
@@ -58,10 +60,12 @@ class GetBatteryAction(Action):
             requires_confirmation=False
         )
     def execute(self):
-        pass
+        with open("/sys/class/power_supply/BAT0/capacity", "r") as f:
+            battery_level = int(f.read().strip())
+        return battery_level
     
 class ListDirectoryAction(Action):
-    def __init__(self):
+    def __init__(self,*,filepath: str ):
         super().__init__(
             name="system.list_directory",
             description="Lists the contents of a directory.",
@@ -69,8 +73,9 @@ class ListDirectoryAction(Action):
             reversible=True,
             requires_confirmation=False
         )
+        self.params["path"] = filepath
     def execute(self):
-        pass
+        return os.listdir(self.params["path"])
 
 class OpenFileAction(Action):
     def __init__(self,*,filepath: str):
@@ -94,25 +99,31 @@ class OpenFileAction(Action):
         return f"Opened file: {self.filepath}"
 
 class OpenFolderAction(Action):
-    def __init__(self):
+    def __init__(self,*, folderpath: str):
         super().__init__(
             name="system.open_folder",
             description="Opens a specified folder.",
             risk_level="medium",
             reversible=False,
-            requires_confirmation=True
+            requires_confirmation=True,
+            params={"folder_path": folderpath}
         )
+        self.folderpath = folderpath
     def execute(self):
-        pass
+        subprocess.Popen(["xdg-open", self.params["folder_path"]])
+        return f"Opened folder: {self.params['folder_path']}"
 
 class LaunchAppAction(Action):
-    def __init__(self):
+    def __init__(self,*, app: str):
         super().__init__(
             name="system.launch_application",
             description="Launches a specified application.",
             risk_level="medium",
             reversible=False,
-            requires_confirmation=True
+            requires_confirmation=True,
+            params={"app": app}
         )
+        self.app = app
     def execute(self):
-        pass
+        subprocess.Popen([self.params["app"]])
+        return f"Launched application: {self.params['app']}"
