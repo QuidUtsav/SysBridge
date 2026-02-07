@@ -4,7 +4,8 @@ from policy.guard import PolicyGuard
 from policy.filesystem_guard import FileSystemGuard
 fs_guard = FileSystemGuard(
     allowed_roots=[
-        "/home/utsav/Desktop/python_project/jarvis"
+        "/home/user/Desktop/allowed_folder",
+        "/home/user/Documents"
     ]
 )
 

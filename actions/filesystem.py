@@ -65,7 +65,7 @@ class GetBatteryAction(Action):
         return battery_level
     
 class ListDirectoryAction(Action):
-    def __init__(self,*,filepath: str ):
+    def __init__(self,*,path: str ):
         super().__init__(
             name="system.list_directory",
             description="Lists the contents of a directory.",
@@ -73,45 +73,45 @@ class ListDirectoryAction(Action):
             reversible=True,
             requires_confirmation=False
         )
-        self.params["path"] = filepath
+        self.params["path"] = path
     def execute(self):
         return os.listdir(self.params["path"])
 
 class OpenFileAction(Action):
-    def __init__(self,*,filepath: str):
+    def __init__(self,*,path: str):
         super().__init__(
             name="open file",
             description="Opens a specified file.",
             risk_level="medium",
             reversible=False,
             requires_confirmation=True,
-            params={"file_path": filepath}
+            params={"path": path}
         )
-        self.filepath = filepath
+        self.path = path
     def execute(self):
-        path = Path(self.filepath).expanduser().resolve()
+        path = Path(self.path).expanduser().resolve()
         if not path.is_file():
-            raise FileNotFoundError(f"File not found: {self.filepath}")
+            raise FileNotFoundError(f"File not found: {self.path}")
         
         subprocess.run(
             ["xdg-open", str(path)],
             check=False)
-        return f"Opened file: {self.filepath}"
+        return f"Opened file: {self.path}"
 
 class OpenFolderAction(Action):
-    def __init__(self,*, folderpath: str):
+    def __init__(self,*, path: str):
         super().__init__(
             name="system.open_folder",
             description="Opens a specified folder.",
             risk_level="medium",
             reversible=False,
             requires_confirmation=True,
-            params={"folder_path": folderpath}
+            params={"path": path}
         )
-        self.folderpath = folderpath
+        self.path = path
     def execute(self):
-        subprocess.Popen(["xdg-open", self.params["folder_path"]])
-        return f"Opened folder: {self.params['folder_path']}"
+        subprocess.Popen(["xdg-open", self.params["path"]])
+        return f"Opened folder: {self.params['path']}"
 
 class LaunchAppAction(Action):
     def __init__(self,*, app: str):
